@@ -1,0 +1,663 @@
+mysqld, Version: 10.0.38-MariaDB-1~xenial (mariadb.org binary distribution). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+190504 16:12:27	    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:12:31	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	show variables like '%gene%'
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:14:12	    6 Connect	root@172.19.0.1 as anonymous on 
+		    6 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		    6 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		    6 Query	select version(), @@version_comment
+		    6 Query	SELECT @ApplicationName
+		    6 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		    6 Query	select @@lower_case_table_names
+		    6 Query	select database()
+		    6 Query	select database(), schema(), left(user(),instr(concat(user(),'@'),'@')-1), @@version_comment
+		    6 Query	select table_name from information_schema.tables
+where table_schema collate utf8_general_ci /* lower(table_schema) */ = 'information_schema'
+  and table_name collate utf8_general_ci /* lower(table_name) */ = 'parameters'
+		    6 Query	select @@default_storage_engine, @@default_storage_engine
+		    6 Query	select @@default_storage_engine, @@default_storage_engine
+		    6 Query	select @@GLOBAL.lower_case_table_names
+		    6 Query	select schema_name, default_collation_name
+from information_schema.schemata
+order by if(schema() = schema_name, 1, 2), schema_name
+		    6 Query	select
+  collation_name,
+  character_set_name,
+  is_default collate utf8_general_ci /* is_default */ = 'Yes' as is_default
+from information_schema.collations
+		    6 Query	select @@default_storage_engine, @@default_storage_engine
+		    6 Query	select @@GLOBAL.lower_case_table_names
+		    6 Query	select schema_name, default_collation_name
+from information_schema.schemata
+order by if(schema() = schema_name, 1, 2), schema_name
+		    6 Query	select table_name, table_type, table_comment, engine, table_collation
+from information_schema.tables
+where table_schema = 'information_schema'
+		    6 Query	select
+  ordinal_position,
+  column_name,
+  column_type,
+  column_default,
+/* */null 
+  generation_expression,
+  table_name,
+  column_comment,
+  is_nullable,
+  extra,
+  collation_name
+from information_schema.columns
+where table_schema = 'information_schema'
+order by table_name, ordinal_position
+		    6 Query	select table_name, table_type, table_comment, engine, table_collation
+from information_schema.tables
+where table_schema = 'mpe'
+		    6 Query	select
+  ordinal_position,
+  column_name,
+  column_type,
+  column_default,
+/* */null 
+  generation_expression,
+  table_name,
+  column_comment,
+  is_nullable,
+  extra,
+  collation_name
+from information_schema.columns
+where table_schema = 'mpe'
+order by table_name, ordinal_position
+		    6 Query	select
+  table_name,
+  index_name,
+  /* null */ index_comment,
+  index_type,
+  group_concat(replace(replace(column_name, '\\', '\\\\'), '\n', '\\n') order by seq_in_index separator '\n' ) as column_names,
+  non_unique
+/* from (select * */
+from information_schema.statistics
+where table_schema = 'mpe' and
+      index_schema = 'mpe' and
+      index_name collate utf8_general_ci /* index_name */ <> 'PRIMARY'
+/* order by table_catalog, table_schema, table_name, index_name, index_type, non_unique, seq_in_index) s */
+group by
+  table_catalog,
+  table_schema,
+  table_name,
+  index_name,
+  index_comment,
+  index_type,
+  non_unique
+		    6 Query	select
+  c.constraint_name,
+  c.table_name,
+  c.constraint_type,
+  group_concat(replace(replace(u.column_name, '\\', '\\\\'), '\n', '\\n') order by u.ordinal_position separator '\n' ) as column_names,
+  u.referenced_table_schema,
+  u.referenced_table_name,
+  group_concat(replace(replace(u.referenced_column_name, '\\', '\\\\'), '\n', '\\n') order by u.position_in_unique_constraint separator '\n') as ref_column_names,
+  r.match_option,
+  r.update_rule,
+  r.delete_rule
+from information_schema.table_constraints c
+  left join information_schema.key_column_usage u on
+      u.constraint_schema   = c.constraint_schema
+  and u.constraint_name     = c.constraint_name
+  and u.table_name = c.table_name
+  and u.table_schema = 'mpe'
+  and if (c.constraint_type collate utf8_general_ci /* c.constraint_type */ = 'UNIQUE', u.referenced_table_name is null, true)
+  left join information_schema.referential_constraints r on
+      r.constraint_schema   = c.constraint_schema
+  and r.constraint_name     = c.constraint_name
+where c.table_schema = 'mpe'
+  and u.table_schema = 'mpe'
+group by
+    c.constraint_schema
+  , c.constraint_name
+  , c.table_schema
+  , c.table_name
+  , c.constraint_type
+  , u.referenced_table_schema
+  , u.referenced_table_name
+  , r.match_option
+  , r.update_rule
+  , r.delete_rule
+order by
+    c.table_schema
+  , c.table_name
+  , c.constraint_schema
+  , c.constraint_name
+		    6 Query	select
+  trigger_name,
+  event_object_table,
+  event_manipulation,
+  action_timing,
+  definer
+from information_schema.triggers
+where trigger_schema = 'mpe'
+		    6 Query	select
+  event_name,
+  event_comment,
+  definer,
+  event_type = 'RECURRING' recurring,
+  interval_value,
+  interval_field,
+  cast(coalesce(starts, execute_at) as char) starts,
+  cast(ends as char) ends,
+  status,
+  on_completion = 'PRESERVE' preserve,
+  last_executed
+from information_schema.events
+where event_schema = 'mpe'
+		    6 Query	select
+  specific_name,
+  routine_type,
+  routine_definition,
+  routine_comment,
+  dtd_identifier,
+  definer
+from information_schema.routines
+where routine_schema = 'mpe'
+190504 16:14:13	    6 Query	select specific_name,
+  ordinal_position,
+  parameter_name,
+  parameter_mode,
+  dtd_identifier
+from information_schema.parameters
+where specific_schema = 'mpe' and ordinal_position > 0
+order by specific_name, ordinal_position
+		    6 Query	select table_name, view_definition, definer
+from information_schema.views
+where table_schema = 'mpe'
+		    6 Query	select specific_name, routine_definition
+from information_schema.routines
+where routine_schema = 'mpe'
+		    6 Query	select
+  trigger_name,
+  event_object_table,
+  action_statement
+from information_schema.triggers
+where trigger_schema = 'mpe'
+		    6 Query	select
+  event_name,
+  event_definition
+from information_schema.events
+where event_schema = 'mpe'
+		    6 Query	SELECT @@tx_isolation
+		    6 Quit	
+190504 16:16:11	    7 Connect	root@localhost as anonymous on 
+190504 16:16:12	    7 Connect	Access denied for user 'root'@'localhost' (using password: NO)
+190504 16:16:39	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	show full processlist
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:16:57	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	show full processlist
+190504 16:16:58	    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:18:24	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+190504 16:18:25	    5 Query	show variables
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:21:09	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	set global error_log = '/var/log/err.log'
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:21:21	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	show variables
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:24:00	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	set global log_error = '/var/log/mysql.log'
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:24:11	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	show variables
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:24:38	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	set  log_error = '/var/log/mysql.log'
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:24:58	    5 Query	SELECT @@tx_isolation
+		    5 Query	select database()
+		    5 Query	set global log_error = '/var/log/mysql.log'
+		    5 Query	select database()
+		    5 Query	SELECT @@tx_isolation
+190504 16:58:23	    8 Connect	root@172.19.0.3 as anonymous on mpe
+		    8 Query	START TRANSACTION
+		    8 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000001_1_a4n', 3, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		    8 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000001_2_a4n', 3, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		    8 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000001_3_a4n', 3, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		    8 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000002_1_a4n', 2, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		    8 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000003_1_a4n', 1, 1111, 'PMI_ARC', '2016-11-12 00:00:00')
+		    8 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000003_1_a4n', 1, 1111, 'PMI_ARC', '2016-11-12 00:00:00')
+		    8 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000004_1_a4n', 1, 1111, 'PMI_ARC', '2016-11-12 00:00:00')
+		    8 Query	COMMIT
+		    8 Quit	
+190504 16:58:45	    9 Connect	root@172.19.0.3 as anonymous on mpe
+		    9 Quit	
+190504 16:59:07	   10 Connect	root@172.19.0.3 as anonymous on mpe
+		   10 Quit	
+190504 16:59:09	   11 Connect	root@172.19.0.3 as anonymous on mpe
+		   11 Quit	
+190504 16:59:19	   12 Connect	root@172.19.0.3 as anonymous on mpe
+		   13 Connect	root@172.19.0.3 as anonymous on mpe
+		   12 Quit	
+		   13 Quit	
+190504 16:59:38	   14 Connect	root@172.19.0.3 as anonymous on mpe
+		   14 Quit	
+190504 17:00:00	   15 Connect	root@172.19.0.3 as anonymous on mpe
+		   16 Connect	root@172.19.0.3 as anonymous on mpe
+		   15 Quit	
+		   16 Quit	
+190504 17:02:23	   17 Connect	root@172.19.0.3 as anonymous on mpe
+		   17 Query	START TRANSACTION
+190504 17:02:25	   17 Query	DELETE FROM consulation_archive_bloc
+		   17 Query	DELETE FROM consultation_archive
+		   17 Query	DELETE FROM consultation
+		   17 Query	DELETE FROM etat_consultation
+		   17 Query	DELETE FROM consultation_archive_atlas
+		   17 Query	INSERT INTO etat_consultation (id, label) VALUES (1, 'INIT')
+		   17 Query	INSERT INTO etat_consultation (id, label) VALUES (5, 'A_ARCHIVER')
+		   17 Query	INSERT INTO etat_consultation (id, label) VALUES (6, 'ARCHIVE')
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_0', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_1', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_2', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_3', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_4', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_5', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_6', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_7', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_8', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_9', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_10', 5)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_11', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_12', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_13', 6)
+190504 17:02:26	   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_14', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_15', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_16', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_17', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_18', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_19', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_20', 6)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_21', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_22', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_23', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_24', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_25', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_26', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_27', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_28', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_29', 1)
+		   17 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_30', 1)
+		   17 Query	COMMIT
+		   17 Quit	
+190504 17:02:29	   18 Connect	root@172.19.0.1 as anonymous on 
+		   18 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   18 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   18 Query	select version(), @@version_comment
+		   18 Query	SELECT @ApplicationName
+		   18 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   18 Query	select @@lower_case_table_names
+		   18 Query	select database()
+		   18 Query	select database(), schema(), left(user(),instr(concat(user(),'@'),'@')-1), @@version_comment
+		   18 Query	select table_name from information_schema.tables
+where table_schema collate utf8_general_ci /* lower(table_schema) */ = 'information_schema'
+  and table_name collate utf8_general_ci /* lower(table_name) */ = 'parameters'
+		   18 Query	select @@default_storage_engine, @@default_storage_engine
+		   18 Query	select @@default_storage_engine, @@default_storage_engine
+		   18 Query	select @@GLOBAL.lower_case_table_names
+		   18 Query	select schema_name, default_collation_name
+from information_schema.schemata
+order by if(schema() = schema_name, 1, 2), schema_name
+		   18 Query	select
+  collation_name,
+  character_set_name,
+  is_default collate utf8_general_ci /* is_default */ = 'Yes' as is_default
+from information_schema.collations
+		   18 Query	select @@default_storage_engine, @@default_storage_engine
+		   18 Query	select table_name, table_type, table_comment, engine, table_collation
+from information_schema.tables
+where table_schema = 'mpe'
+		   18 Query	select
+  ordinal_position,
+  column_name,
+  column_type,
+  column_default,
+/* */null 
+  generation_expression,
+  table_name,
+  column_comment,
+  is_nullable,
+  extra,
+  collation_name
+from information_schema.columns
+where table_schema = 'mpe'
+order by table_name, ordinal_position
+		   18 Query	select
+  table_name,
+  index_name,
+  /* null */ index_comment,
+  index_type,
+  group_concat(replace(replace(column_name, '\\', '\\\\'), '\n', '\\n') order by seq_in_index separator '\n' ) as column_names,
+  non_unique
+/* from (select * */
+from information_schema.statistics
+where table_schema = 'mpe' and
+      index_schema = 'mpe' and
+      index_name collate utf8_general_ci /* index_name */ <> 'PRIMARY'
+/* order by table_catalog, table_schema, table_name, index_name, index_type, non_unique, seq_in_index) s */
+group by
+  table_catalog,
+  table_schema,
+  table_name,
+  index_name,
+  index_comment,
+  index_type,
+  non_unique
+		   18 Query	select
+  c.constraint_name,
+  c.table_name,
+  c.constraint_type,
+  group_concat(replace(replace(u.column_name, '\\', '\\\\'), '\n', '\\n') order by u.ordinal_position separator '\n' ) as column_names,
+  u.referenced_table_schema,
+  u.referenced_table_name,
+  group_concat(replace(replace(u.referenced_column_name, '\\', '\\\\'), '\n', '\\n') order by u.position_in_unique_constraint separator '\n') as ref_column_names,
+  r.match_option,
+  r.update_rule,
+  r.delete_rule
+from information_schema.table_constraints c
+  left join information_schema.key_column_usage u on
+      u.constraint_schema   = c.constraint_schema
+  and u.constraint_name     = c.constraint_name
+  and u.table_name = c.table_name
+  and u.table_schema = 'mpe'
+  and if (c.constraint_type collate utf8_general_ci /* c.constraint_type */ = 'UNIQUE', u.referenced_table_name is null, true)
+  left join information_schema.referential_constraints r on
+      r.constraint_schema   = c.constraint_schema
+  and r.constraint_name     = c.constraint_name
+where c.table_schema = 'mpe'
+  and u.table_schema = 'mpe'
+group by
+    c.constraint_schema
+  , c.constraint_name
+  , c.table_schema
+  , c.table_name
+  , c.constraint_type
+  , u.referenced_table_schema
+  , u.referenced_table_name
+  , r.match_option
+  , r.update_rule
+  , r.delete_rule
+order by
+    c.table_schema
+  , c.table_name
+  , c.constraint_schema
+  , c.constraint_name
+		   18 Query	select
+  trigger_name,
+  event_object_table,
+  event_manipulation,
+  action_timing,
+  definer
+from information_schema.triggers
+where trigger_schema = 'mpe'
+		   18 Query	select
+  event_name,
+  event_comment,
+  definer,
+  event_type = 'RECURRING' recurring,
+  interval_value,
+  interval_field,
+  cast(coalesce(starts, execute_at) as char) starts,
+  cast(ends as char) ends,
+  status,
+  on_completion = 'PRESERVE' preserve,
+  last_executed
+from information_schema.events
+where event_schema = 'mpe'
+		   18 Query	select
+  specific_name,
+  routine_type,
+  routine_definition,
+  routine_comment,
+  dtd_identifier,
+  definer
+from information_schema.routines
+where routine_schema = 'mpe'
+		   18 Query	select specific_name,
+  ordinal_position,
+  parameter_name,
+  parameter_mode,
+  dtd_identifier
+from information_schema.parameters
+where specific_schema = 'mpe' and ordinal_position > 0
+order by specific_name, ordinal_position
+190504 17:02:30	   18 Query	select table_name, view_definition, definer
+from information_schema.views
+where table_schema = 'mpe'
+		   18 Query	select specific_name, routine_definition
+from information_schema.routines
+where routine_schema = 'mpe'
+		   18 Query	select
+  trigger_name,
+  event_object_table,
+  action_statement
+from information_schema.triggers
+where trigger_schema = 'mpe'
+		   18 Query	select
+  event_name,
+  event_definition
+from information_schema.events
+where event_schema = 'mpe'
+		   18 Query	SELECT @@tx_isolation
+		   18 Quit	
+190504 17:02:31	   19 Connect	root@172.19.0.1 as anonymous on 
+		   19 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   19 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   19 Query	select version(), @@version_comment
+		   19 Query	SELECT @ApplicationName
+		   19 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   19 Query	select @@lower_case_table_names
+		   19 Query	use mpe
+		   19 Query	select database()
+		   19 Query	set @@SQL_SELECT_LIMIT=502
+		   19 Query	SELECT t.* FROM mpe.consultation t
+LIMIT 501
+		   19 Query	set @@SQL_SELECT_LIMIT=DEFAULT
+		   19 Query	SELECT @@tx_isolation
+190504 17:02:42	   20 Connect	root@172.19.0.1 as anonymous on 
+		   20 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   20 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   20 Query	select version(), @@version_comment
+		   20 Query	SELECT @ApplicationName
+		   20 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   20 Query	select @@lower_case_table_names
+		   20 Query	use mpe
+		   20 Query	truncate table consultation
+		   20 Query	SELECT @@tx_isolation
+		   20 Quit	
+		   21 Connect	root@172.19.0.1 as anonymous on 
+		   21 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   21 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   21 Query	select version(), @@version_comment
+		   21 Query	SELECT @ApplicationName
+		   21 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   21 Query	select @@lower_case_table_names
+		   21 Query	select database()
+		   21 Query	SELECT @@tx_isolation
+		   21 Quit	
+190504 17:02:44	   19 Query	SELECT @@tx_isolation
+		   19 Query	select database()
+		   19 Query	set @@SQL_SELECT_LIMIT=502
+		   19 Query	SELECT t.* FROM mpe.consultation t
+LIMIT 501
+		   19 Query	set @@SQL_SELECT_LIMIT=DEFAULT
+		   19 Query	SELECT @@tx_isolation
+190504 17:02:56	   22 Connect	root@172.19.0.3 as anonymous on mpe
+		   22 Query	START TRANSACTION
+190504 17:02:58	   22 Query	DELETE FROM consulation_archive_bloc
+		   22 Query	DELETE FROM consultation_archive
+		   22 Query	DELETE FROM consultation
+		   22 Query	DELETE FROM etat_consultation
+		   22 Query	DELETE FROM consultation_archive_atlas
+		   22 Query	INSERT INTO etat_consultation (id, label) VALUES (1, 'INIT')
+		   22 Query	INSERT INTO etat_consultation (id, label) VALUES (5, 'A_ARCHIVER')
+		   22 Query	INSERT INTO etat_consultation (id, label) VALUES (6, 'ARCHIVE')
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_0', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_1', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_2', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_3', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_4', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_5', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_6', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_7', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_8', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_9', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_10', 5)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_11', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_12', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_13', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_14', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_15', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_16', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_17', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_18', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_19', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_20', 6)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_21', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_22', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_23', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_24', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_25', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_26', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_27', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_28', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_29', 1)
+		   22 Query	INSERT INTO consultation (organisme, reference, id_etat_consultation) VALUES ('a4n', 'REFERENCE_30', 1)
+		   22 Query	COMMIT
+		   22 Quit	
+190504 17:02:59	   19 Query	SELECT @@tx_isolation
+		   19 Query	select database()
+		   19 Query	set @@SQL_SELECT_LIMIT=502
+		   19 Query	SELECT t.* FROM mpe.consultation t
+LIMIT 501
+		   19 Query	set @@SQL_SELECT_LIMIT=DEFAULT
+		   19 Query	SELECT @@tx_isolation
+190504 17:07:46	   23 Connect	root@172.19.0.1 as anonymous on 
+		   23 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   23 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   23 Query	select version(), @@version_comment
+		   23 Query	SELECT @ApplicationName
+		   23 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   23 Query	select @@lower_case_table_names
+190504 17:07:47	   23 Query	select database()
+		   23 Query	SELECT @@tx_isolation
+		   23 Quit	
+190504 17:16:16	   24 Connect	root@172.19.0.1 as anonymous on 
+		   24 Connect	Access denied for user 'root'@'172.19.0.1' (using password: YES)
+190504 17:16:23	   25 Connect	root@172.19.0.1 as anonymous on 
+		   25 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   25 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   25 Query	select version(), @@version_comment
+		   25 Query	SELECT @ApplicationName
+		   25 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   25 Query	select @@lower_case_table_names
+		   25 Query	select database()
+		   25 Query	SELECT @@tx_isolation
+		   25 Quit	
+190504 17:16:25	   26 Connect	root@172.19.0.1 as anonymous on 
+		   26 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   26 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   26 Query	select version(), @@version_comment
+		   26 Query	SELECT @ApplicationName
+		   26 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   26 Query	select @@lower_case_table_names
+		   26 Query	select database()
+		   26 Query	SELECT @@tx_isolation
+		   26 Quit	
+190504 17:17:10	   27 Connect	root@172.19.0.1 as anonymous on mpe
+190504 17:18:03	   27 Quit	
+190504 17:18:05	   28 Connect	root@172.19.0.1 as anonymous on mpe
+190504 17:18:11	   29 Connect	root@172.19.0.1 as anonymous on mpe
+190504 17:18:40	   29 Quit	
+190504 17:18:55	   30 Connect	root@172.19.0.1 as anonymous on mpe
+190504 17:19:17	   30 Quit	
+190504 17:19:19	   31 Connect	root@172.19.0.1 as anonymous on mpe
+190504 17:19:26	   31 Quit	
+190504 17:24:45	   32 Connect	root@172.19.0.1 as anonymous on mpe
+190504 17:24:52	   32 Quit	
+190504 18:08:16	   33 Connect	root@172.19.0.3 as anonymous on mpe
+		   34 Connect	root@172.19.0.3 as anonymous on mpe
+		   33 Quit	
+190504 18:08:23	   35 Connect	root@172.19.0.3 as anonymous on mpe
+		   35 Query	START TRANSACTION
+		   35 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000001_1_a4n', 3, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		   35 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000001_2_a4n', 3, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		   35 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000001_3_a4n', 3, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		   35 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000002_1_a4n', 2, 1111, 'PMI_ARC', '2017-11-12 00:00:00')
+		   35 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000003_1_a4n', 1, 1111, 'PMI_ARC', '2016-11-12 00:00:00')
+		   35 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000003_1_a4n', 1, 1111, 'PMI_ARC', '2016-11-12 00:00:00')
+		   35 Query	INSERT INTO consultation_archive_atlas (doc_id, nombre_bloc, comp_id, cont_rep, date_envoi) VALUES ('0000004_1_a4n', 1, 1111, 'PMI_ARC', '2016-11-12 00:00:00')
+		   35 Query	COMMIT
+190504 18:08:24	   34 Quit	
+		   35 Quit	
+190504 18:09:08	   36 Connect	root@172.19.0.3 as anonymous on mpe
+		   37 Connect	root@172.19.0.3 as anonymous on mpe
+		   36 Quit	
+		   37 Quit	
+190504 18:11:25	   38 Connect	root@172.19.0.1 as anonymous on 
+		   38 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   38 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   38 Query	select version(), @@version_comment
+		   38 Query	SELECT @ApplicationName
+		   38 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   38 Query	select @@lower_case_table_names
+		   38 Query	SELECT @@tx_isolation
+		   38 Query	select database()
+		   38 Query	show grants
+		   38 Query	select database()
+		   38 Query	SELECT @@tx_isolation
+190504 18:37:49	   39 Connect	root@172.19.0.3 as anonymous on 
+		   39 Query	select @@version_comment limit 1
+190504 18:45:59	   39 Quit	
+190504 18:49:31	   40 Connect	debian-sys-maint@localhost as anonymous on 
+		   40 Connect	Access denied for user 'debian-sys-maint'@'localhost' (using password: YES)
+		   41 Connect	debian-sys-maint@localhost as anonymous on 
+		   41 Connect	Access denied for user 'debian-sys-maint'@'localhost' (using password: YES)
+		   42 Connect	debian-sys-maint@localhost as anonymous on 
+		   42 Connect	Access denied for user 'debian-sys-maint'@'localhost' (using password: YES)
+190504 18:51:28	   43 Connect	debian-sys-maint@localhost as anonymous on 
+		   43 Connect	Access denied for user 'debian-sys-maint'@'localhost' (using password: YES)
+		   44 Connect	debian-sys-maint@localhost as anonymous on 
+		   44 Connect	Access denied for user 'debian-sys-maint'@'localhost' (using password: YES)
+		   45 Connect	debian-sys-maint@localhost as anonymous on 
+		   45 Connect	Access denied for user 'debian-sys-maint'@'localhost' (using password: YES)
+190504 20:08:11	   46 Connect	root@172.19.0.3 as anonymous on 
+		   46 Query	select @@version_comment limit 1
+190504 20:08:14	   46 Quit	
+190504 20:10:12	   47 Connect	root@172.19.0.1 as anonymous on 
+		   47 Query	set autocommit=1, sql_mode = concat(@@sql_mode,',STRICT_TRANS_TABLES')
+		   47 Query	SELECT @@max_allowed_packet,@@system_time_zone,@@time_zone,@@auto_increment_increment
+		   47 Query	select version(), @@version_comment
+		   47 Query	SELECT @ApplicationName
+		   47 Query	SET @ApplicationName='PhpStorm 2018.3.4'
+		   47 Query	select @@lower_case_table_names
+		   47 Query	select database()
+		   47 Query	SELECT @@tx_isolation
+190504 20:10:13	   47 Quit	

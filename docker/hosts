@@ -1,0 +1,6 @@
+[web]
+mpeweb ansible_ssh_host=localhost ansible_ssh_private_key_file=.ssh/id_rsa
+[database]
+mpedb ansible_ssh_host=localhost ansible_ssh_private_key_file=.ssh/id_rsa
+[mpe]
+mpe ansible_connection=docker

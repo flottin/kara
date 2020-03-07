@@ -1,0 +1,21 @@
+version: '2'
+services:
+  mpe:
+    image: 'mpe_image:latest'
+    container_name: 'mpe'
+    hostname: 'mpe'
+    cap_add:
+      - SYS_ADMIN
+    ports:
+      - "80:80"
+#      - "443:443"
+    tmpfs:
+      - /run
+      - /run/lock
+    volumes:
+      - ../:/karatube
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./root/bash_history:/root/.bash_history
+
+    command:
+      - /lib/systemd/systemd

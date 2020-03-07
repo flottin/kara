@@ -1,0 +1,103 @@
+ls
+cd /data/apache2/mpe/htdocs/
+exit
+sudo 
+sudo -u www-data ls
+cd /data/apache2/mpe/htdocs/
+sudo -u www-data ls
+sudo -u www-data ls -al
+exit
+cd /data/apache2/mpe/htdocs/
+apt install npm
+npm install -g yarn
+npm install -g n
+n latest
+node -v
+yarn -v
+composer -vvvv  require symfony/webpack-encore-bundle
+composer -vvvv  up 
+composer -vvvv  require symfony/webpack-encore-bundle
+yarn install
+ls
+cat yarn.lock 
+ls node_modules/
+npm -g install node-sass
+npm -g install sass
+npm
+ls
+ls node_modules/
+npm -v
+apt install npm
+npm
+apt -remove --purge npm
+apt remove --purge npm
+npm
+apt install npm
+npm
+apn install npm-cli
+apt install npm-cli
+ls
+rm -rf node_modules/
+apt install npm-cli
+npm
+yarn install sass
+yarn add sass
+yarn install npm
+yarn add npm
+npm -v
+yarn add sass-loader@^7.0.1 node-sass --dev
+ls node_modules/
+yarn encore dev
+npm
+npm -g
+npm install npm
+sudo rm -rf /usr/local/lib/node_modules
+sudo rm -rf ~/.npm
+apt remove --purge npm
+sudo apt autoremove
+apt install npm
+npm
+apt remove --purge node
+apt remove --purge nodejs
+n latest
+npm
+apt install npm
+npm 
+yarn global add npm
+npm 
+yarn global add npm
+yarn
+apt install npm
+npm install -g yarn
+npm install -g n
+n latest
+cat yarn.lock 
+apt install npm
+cat yarn.lock 
+apt install yarn
+yarn -v
+exit
+top
+sudo su 
+exit
+apt install npm
+npm -g install npm
+npm 
+npm install -g n
+n latest
+npm
+node ^^
+node -v
+node
+npm
+cd /data/apache2/mpe/htdocs/
+rm -rf node_modules/
+npm
+npm remove n
+exit
+cd /home
+ls
+ls /data/apache2/mpe/htdocs/
+exit
+cd karatube/
+mvn compile && java -classpath target/classes/ in.karatube.App

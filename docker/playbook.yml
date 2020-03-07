@@ -1,0 +1,8 @@
+---
+#- import_playbook: playbook-common.yml
+#- import_playbook: playbook-db.yml
+- import_playbook: playbook-php.yml
+- import_playbook: playbook-docker-commit.yml
+
+
+

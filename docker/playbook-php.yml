@@ -1,0 +1,84 @@
+---
+
+- hosts: mpe
+  remote_user: root
+  become: yes
+  gather_facts: no
+  vars:
+    php_version: 7.3
+    service_name: mpe
+  tasks:
+
+    - name: installation php{{php_version}}-fpm
+      apt:
+        update_cache: yes
+        name: [
+          'php{{php_version}}-fpm',
+          'libapache2-mod-php{{php_version}}',
+          'php{{php_version}}-mysql',
+          'php{{php_version}}-curl',
+          'php{{php_version}}-xml',
+          'php{{php_version}}-zip',
+          'php-xdebug'
+        ]
+
+    - name: Create a directory if it does not exist
+      file:
+        path: /data/apache2/{{service_name}}/data
+        state: directory
+        mode: '0755'
+        owner: www-data
+        group: www-data
+    #
+    - name: Copy vars
+      copy:
+        src: etc/apache2/sites-available/000-default.conf
+        dest: /etc/apache2/sites-available/000-default.conf
+
+
+#    - name: Copy vars
+#      copy:
+#        src: etc/apache2/sites-available/default-ssl.conf
+#        dest: /etc/apache2/sites-available/default-ssl.conf
+
+
+    #    - name: Copy crt
+    #      copy:
+    #        src: etc/ssl/certs/localhost.pem
+    #        dest: /etc/ssl/certs/localhost.pem
+    #
+    #    - name: Copy key
+    #      copy:
+    #        src: etc/ssl/certs/localhost-key.pem
+    #        dest: /etc/ssl/certs/localhost-key.pem
+
+    #    - name: install mods
+    #      apache2_module: state=present name=ssl
+
+    #    - name: Copy php.ini
+    #      copy:
+    #        src: etc/php/7.2/fpm/php.ini
+    #        dest: /etc/php/7.2/fpm/php.ini
+    #
+    #    - name: Enable default SSL virtualhost
+    #      become: yes
+    #      command: "a2ensite default-ssl"
+
+    - command: "{{ item }}"
+      with_items:
+        - "a2enmod proxy_fcgi setenvif"
+        - "a2enconf php{{php_version}}-fpm"
+        - "a2dismod php{{php_version}}"
+
+    - name: Restart service httpd, in all cases
+      service:
+        name: apache2
+        state: restarted
+
+    - name: Restart service php{{php_version}}-fpm, in all cases
+      service:
+        name: php{{php_version}}-fpm
+        state: restarted
+
+    # - name: Recursively change ownership of a directory
+    #   raw: "chown -R www-data: /data/apache2/mpe/htdocs/*"
