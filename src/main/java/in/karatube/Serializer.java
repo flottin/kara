@@ -10,7 +10,11 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Serializer {
     private String type;
@@ -29,6 +33,21 @@ public class Serializer {
 
     public Serializer() {
         this("json");
+    }
+
+    public String get(Object o, boolean save) throws IOException {
+        String res;
+        if (type.equals("csv")) {
+            res = getCsvMapper(o);
+        } else {
+            res = this.mapper.writeValueAsString(o);
+        }
+
+        if (save && !res.isEmpty()){
+            this.save(res, filename());
+        }
+
+        return res;
     }
 
     public String get(Object o) throws IOException {
@@ -62,5 +81,32 @@ public class Serializer {
 
         return csvMapper.writer(csvSchema)
                 .writeValueAsString(o);
+    }
+
+    public String filename(){
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss");
+        String formattedDate = myDateObj.format(myFormatObj);
+        return String.format("export.%s.%s", formattedDate, this.type);
+    }
+
+    public void save(String txt, String filename) throws IOException{
+        File file = new File("data");
+        boolean fileExists = file.exists();
+        boolean dirCreated;
+        if (!fileExists){
+            dirCreated = file.mkdir();
+        } else {
+            dirCreated = true;
+        }
+
+        if (dirCreated){
+            FileOutputStream fos = new FileOutputStream("data/" + filename);
+            fos.write(txt.getBytes());
+            fos.flush();
+            fos.close();
+            System.out.println("File "  + filename + " saved !");
+        }
+
     }
 }
