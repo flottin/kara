@@ -92,12 +92,9 @@ public class Serializer {
 
     public void save(String txt, String filename) throws IOException{
         File file = new File("data");
-        boolean fileExists = file.exists();
-        boolean dirCreated;
-        if (!fileExists){
+        boolean dirCreated = file.exists();
+        if (!dirCreated){
             dirCreated = file.mkdir();
-        } else {
-            dirCreated = true;
         }
 
         if (dirCreated){
@@ -107,6 +104,5 @@ public class Serializer {
             fos.close();
             System.out.println("File "  + filename + " saved !");
         }
-
     }
 }
