@@ -19,14 +19,16 @@ public class Tracks
 
 	/**
 	 *
-	 * @param title
-	 * @param published
+	 * @param title: title of track
+	 * @param artist: artist of track
+	 * @param published: true if published on front end
 	 */
-	public void add(String title, boolean published) {
+	public void add(String title, String artist,  boolean published) {
 		this.id ++;
 		Track track = new Track();
 		track.setId(this.id);
 		track.setTitle(title);
+		track.setArtist(artist);
 		track.setPublished(published);
 		trackList.add(track);
 	}
@@ -35,10 +37,4 @@ public class Tracks
 		return trackList;
 	}
 
-	/**
-	 * @param title
-	 */
-	public void add(String title) {
-		this.add(title, false);
-	}
 }

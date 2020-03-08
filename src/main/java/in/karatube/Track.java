@@ -26,6 +26,7 @@ public class Track
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getArtist() {
 		return Artist;
 	}
