@@ -15,10 +15,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Serializer {
     private String type;
     private ObjectMapper mapper;
+
+    public final String PATH_DATA_DIR = "data";
 
     public Serializer(String type) {
         this.type = type;
@@ -29,10 +32,6 @@ public class Serializer {
         } else {
             this.mapper = getJsonMapper();
         }
-    }
-
-    public Serializer() {
-        this("json");
     }
 
     public String get(Object o, boolean save) throws IOException {
@@ -85,20 +84,28 @@ public class Serializer {
 
     public String filename(){
         LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss");
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HHmmss");
         String formattedDate = myDateObj.format(myFormatObj);
         return String.format("export.%s.%s", formattedDate, this.type);
     }
 
     public void save(String txt, String filename) throws IOException{
-        File file = new File("data");
+        LocalDateTime myDateObj = LocalDateTime.now();
+        ArrayList<String> pathList=new ArrayList<>();
+        pathList.add(PATH_DATA_DIR);
+        pathList.add(String.valueOf(myDateObj.getYear()));
+        pathList.add(String.valueOf(myDateObj.getMonthValue()));
+        pathList.add(String.valueOf(myDateObj.getDayOfMonth()));
+        String path = String.join("/", pathList );
+        File file = new File(path);
         boolean dirCreated = file.exists();
         if (!dirCreated){
-            dirCreated = file.mkdir();
+            dirCreated = file.mkdirs();
         }
-
         if (dirCreated){
-            FileOutputStream fos = new FileOutputStream("data/" + filename);
+            pathList.add(filename());
+            String pathFile = String.join("/", pathList );
+            FileOutputStream fos = new FileOutputStream( pathFile );
             fos.write(txt.getBytes());
             fos.flush();
             fos.close();
