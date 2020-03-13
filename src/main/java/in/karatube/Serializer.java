@@ -9,21 +9,30 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import in.karatube.repository.FileRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class Serializer {
     private String type;
+
     private ObjectMapper mapper;
 
     public final String PATH_DATA_DIR = "data";
 
-    public Serializer(String type) {
+    private FileSystem fs;
+
+    public Serializer(FileSystem fs){
+
+    }
+
+    public Serializer setType(String type) {
+        this.fs = fs;
         this.type = type;
         if (type.equals("xml")) {
             this.mapper = getXmlMapper();
@@ -32,8 +41,16 @@ public class Serializer {
         } else {
             this.mapper = getJsonMapper();
         }
+        return this;
     }
 
+    /**
+     * get the string serialize
+     * @param o : the object to serialize
+     * @param save : save in file if true
+     * @return
+     * @throws IOException
+     */
     public String get(Object o, boolean save) throws IOException {
         String res;
         if (type.equals("csv")) {
@@ -49,14 +66,7 @@ public class Serializer {
         return res;
     }
 
-    public String get(Object o) throws IOException {
-        if (type.equals("csv")) {
-            return getCsvMapper(o);
-        }
-        return this.mapper.writeValueAsString(o);
-    }
-
-    public ObjectMapper getXmlMapper() {
+    private ObjectMapper getXmlMapper() {
         XmlMapper mapper = new XmlMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         mapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
@@ -64,15 +74,15 @@ public class Serializer {
         return mapper;
     }
 
-    public ObjectMapper getJsonMapper() {
+    private ObjectMapper getJsonMapper() {
         return new ObjectMapper();
     }
 
-    public ObjectMapper getYamlMapper() {
+    private ObjectMapper getYamlMapper() {
         return new ObjectMapper(new YAMLFactory());
     }
 
-    public String getCsvMapper(Object o) throws JsonProcessingException {
+    private String getCsvMapper(Object o) throws JsonProcessingException {
         CsvMapper csvMapper = new CsvMapper();
         csvMapper.disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
         CsvSchema csvSchema;
@@ -82,34 +92,42 @@ public class Serializer {
                 .writeValueAsString(o);
     }
 
-    public String filename(){
+    private String filename(){
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HHmmss");
         String formattedDate = myDateObj.format(myFormatObj);
         return String.format("export.%s.%s", formattedDate, this.type);
     }
 
-    public void save(String txt, String filename) throws IOException{
-        LocalDateTime myDateObj = LocalDateTime.now();
-        ArrayList<String> pathList=new ArrayList<>();
-        pathList.add(PATH_DATA_DIR);
-        pathList.add(String.valueOf(myDateObj.getYear()));
-        pathList.add(String.valueOf(myDateObj.getMonthValue()));
-        pathList.add(String.valueOf(myDateObj.getDayOfMonth()));
-        String path = String.join("/", pathList );
+    private String getPath() throws IOException {
+        LocalDateTime today = LocalDateTime.now();
+        String path = String.format(
+                "%s/%d/%d/%d",
+                PATH_DATA_DIR,
+                today.getYear(),
+                today.getMonthValue(),
+                today.getDayOfMonth()
+        );
         File file = new File(path);
         boolean dirCreated = file.exists();
         if (!dirCreated){
             dirCreated = file.mkdirs();
         }
-        if (dirCreated){
-            pathList.add(filename());
-            String pathFile = String.join("/", pathList );
-            FileOutputStream fos = new FileOutputStream( pathFile );
-            fos.write(txt.getBytes());
-            fos.flush();
-            fos.close();
-            System.out.println("File "  + filename + " saved !");
+        if (dirCreated) {
+            return path;
         }
+        throw new IOException("getPath Error");
+    }
+
+    private void save(String txt, String filename) throws IOException{
+
+
+        String path = getPath();
+        String pathFile = String.format("%s/%s", path, filename()) ;
+        FileOutputStream fos = new FileOutputStream( pathFile );
+        fos.write(txt.getBytes());
+        fos.flush();
+        fos.close();
+        System.out.println("File "  + filename + " saved !");
     }
 }
