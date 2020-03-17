@@ -9,30 +9,30 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import in.karatube.repository.FileRepository;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Serializer {
+
     private String type;
 
     private ObjectMapper mapper;
 
-    public final String PATH_DATA_DIR = "data";
-
     private FileSystem fs;
 
-    public Serializer(FileSystem fs){
+    public final String PATH_DATA_DIR = "data";
 
+    public Serializer(FileSystem fs){
+        this.fs = fs;
     }
 
     public Serializer setType(String type) {
-        this.fs = fs;
+
         this.type = type;
         if (type.equals("xml")) {
             this.mapper = getXmlMapper();
@@ -60,7 +60,8 @@ public class Serializer {
         }
 
         if (save && !res.isEmpty()){
-            this.save(res, filename());
+
+           save(res, this.type);
         }
 
         return res;
@@ -92,42 +93,26 @@ public class Serializer {
                 .writeValueAsString(o);
     }
 
-    private String filename(){
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HHmmss");
-        String formattedDate = myDateObj.format(myFormatObj);
-        return String.format("export.%s.%s", formattedDate, this.type);
-    }
-
-    private String getPath() throws IOException {
+    public Path getPath(String extension) {
         LocalDateTime today = LocalDateTime.now();
-        String path = String.format(
-                "%s/%d/%d/%d",
-                PATH_DATA_DIR,
-                today.getYear(),
-                today.getMonthValue(),
-                today.getDayOfMonth()
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HHmmss");
+        String formattedDate = today.format(myFormatObj);
+
+        return this.fs.getPath(
+            PATH_DATA_DIR,
+            String.valueOf(today.getYear()),
+            String.valueOf(today.getMonthValue()),
+            String.valueOf(today.getDayOfMonth()),
+            String.format("export.%s.%s", formattedDate, extension)
         );
-        File file = new File(path);
-        boolean dirCreated = file.exists();
-        if (!dirCreated){
-            dirCreated = file.mkdirs();
-        }
-        if (dirCreated) {
-            return path;
-        }
-        throw new IOException("getPath Error");
     }
 
-    private void save(String txt, String filename) throws IOException{
-
-
-        String path = getPath();
-        String pathFile = String.format("%s/%s", path, filename()) ;
-        FileOutputStream fos = new FileOutputStream( pathFile );
-        fos.write(txt.getBytes());
-        fos.flush();
-        fos.close();
-        System.out.println("File "  + filename + " saved !");
+    public Path save(String txt, String extension) throws IOException{
+        Path path = getPath(extension);
+        if (Files.notExists(path.getParent())){
+            Files.createDirectories(path.getParent());
+        }
+        Files.write(path, txt.getBytes());
+        return path;
     }
 }

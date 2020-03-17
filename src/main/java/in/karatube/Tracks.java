@@ -25,13 +25,12 @@ public class Tracks
 	 */
 	public void add(String title, String artist,  boolean published) {
 		this.id ++;
-//		Track track = new Track();
-//
-//		track.setId(this.id);
-//		track.setTitle(title);
-//		track.setArtist(artist);
-//		track.setPublished(published);
-//		trackList.add(track);
+		Track track = new Track();
+		track.setId(this.id);
+		track.setTitle(title);
+		track.setArtist(artist);
+		track.setPublished(published);
+		trackList.add(track);
 	}
 
 	public List<Track> getList(){

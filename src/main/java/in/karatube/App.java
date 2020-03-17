@@ -1,9 +1,6 @@
 package in.karatube;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.*;
 
 public class App
@@ -15,8 +12,7 @@ public class App
 		tracks.add("Mon quatrième Titre", "Artist quatrième",true);
 
 		try{
-
-
+			FileSystem fs = FileSystems.getDefault();
 			Serializer ser = new Serializer(fs);
 			System.out.println( ser.setType("xml").get(tracks, true) );
 			System.out.println( ser.setType("json").get(tracks, true) );
@@ -24,10 +20,8 @@ public class App
 			String csv = ser.setType("csv").get(tracks.getList(), true);
 			System.out.println( csv );
 
-		} catch (IOException | URISyntaxException e){
+		} catch (IOException e){
 			System.out.print(e.getMessage());
 		}
     }
-
-
 }
